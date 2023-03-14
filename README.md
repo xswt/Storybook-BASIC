@@ -78,22 +78,51 @@ Una vez que sabemos "Que es" y "Para que sirve" solo nos queda entender su sinta
   
   
   
-## DOCUMENTAR NUESTROS COMPONENTES - BASIC
+### Estructura de carpetas y ficheros - Storybook
+---
 
-Lo primero es enteder a que nivel del `Path`funciona `Storybook` 
-
-Ahora veremos son las entradas de texto plano que nos permite tener `Storybook` como por ejemplo:
- <kbd>![image](https://user-images.githubusercontent.com/32310561/224542739-80c8e491-b415-4552-a3cb-60257700433b.png) </kbd>
- 
- 
+> Se entiende como `storie` al conjunto de datos relacionados con la documentacion de un componente. Esta documentacion se compone de un renderizado del componente mas una breve descripcion de los parametros que acepta dicho componente. 
 
 
-Vamos a ver ejemplos basicos de como documentar nuestros componentes para que salgan correctamente en `Storybook`.
 
-Empecemos con un componente de React como puede ser un `Button.jsx`
 
+La primera carpeta que encontramos es la de `.storybook` esta carpeta contiene los ficheros propios de configuración 
+<kbd>![image](https://user-images.githubusercontent.com/32310561/224654396-4bee5c50-e8c5-45c8-99e8-1c791f82383d.png)</kbd>
+
+Como podemos apreciar por "defecto" nos vienen solo dos `Main` y `Preview` pero hay una mas importante que debemos conocer que es `Manager`
+   * `Main` corresponde con la configuracion global de nuestro `storybook`.
+   
+        <kbd>![image](https://user-images.githubusercontent.com/32310561/224684682-9501327e-a941-4362-a13b-4b4fe3946ac4.png)</kbd>
+
+   * `Preview` corresponde con la parte que vemos de los componentes que se renderizan en el `storybook`.
+   * `Manager` corresponde con el resto del `storybook`.
+
+     
+        <kbd>![Captura](https://user-images.githubusercontent.com/32310561/224781086-9a89f989-34f3-4273-bfe0-ba65621b60a2.JPG)</kbd>
+      
+   A parte de la carpeta `.storybook` por defecto nos crea en `src` una carpeta llamada `stories` .
+    
+<kbd>![Captura](https://user-images.githubusercontent.com/32310561/224773147-e1eb1dda-8acc-4e01-9025-30bfaf0a8c59.png)</kbd>
+
+    
+   Esta carpeta contiene varios ejemplos de como documentar nuestros componentes. Principalmente tenemos que entender que existen dos tipos de ficheros:
+   
+   * `nombreFichero.stories.mdx` 
+   * `nombreFichero.stories.jsx/tsx` 
+  
+   
+   Como hemos visto en la configuracion general nuestro `Storybook` buscara en el path src todos los ficheros que tengan `.stories` y terminen en `.jsx .js .ts .tsx .mdx`. ![image](https://user-images.githubusercontent.com/32310561/224774558-f42772db-fa8e-47d6-920f-e8d1de63652c.png) o ![image](https://user-images.githubusercontent.com/32310561/224774697-c3fc6bcc-1afe-4c1f-a0ba-bd4b26644362.png) 
+   
+   
+La carpeta stories realmente no es necesaria , la ha creado `storybook` como recomendacion de donde almacenar nuestros ficheros. Nosotros podemos poner los ficheros a la altura que queramos siempre que esten dentro de la ruta especificada en el fichero de configuración `main`
+
+
+## DOCUMENTAR COMPONENTES
+Ahora que tenemos claros los conceptos basicos de `storybook` y tenemos el entorno montado y funcionando podemos ponernos a trabajar con el codigo y documentar nuestros primeros componentes. Vamos a ir viendo los dos tipos de ficheros que se pueden crear para documentar y las configuraciones que ofrecen cada uno al montar las `stories`.
+
+#### COMPONENTE DE REACT - Button.jsx
 ```javascript
-  export const ButtonPG = ({setState,label="Cambiar a"})=>{
+  export const Button = ({setState,label="Cambiar a"})=>{
 
     const nombres = ["guille","pau"]
 
@@ -104,14 +133,131 @@ return(
     <button onClick={()=>setState(nombres[1])}>{label} Paula</button>
     </>
 )}
+```
+
+Esto seria un componente básico de React que se usa para cambiar el nombre de un estado en el padre entre Guille y Paula dependiendo de que botón pulsemos. Tenemos dos props definidas:
+* `setState` que nos permite modificar un estado del useState en el padre que use el componente.
+* `label` texto que acompaña a los botones que modifican el nombre entre Guille y Paula.
+
+
+Vamos a ver como configurar paso a paso este componente para que se integre sin problemas en nuestro `storybook`.
+
+Partimos de que hemos eliminado la carpeta de stories que nos crea por defecto en la instalacion de `storybook` y tenemos levantado el entorno `npm run storybook`. Tendremos la siguiente imagen:
+
+<kbd>![image](https://user-images.githubusercontent.com/32310561/224855023-69a38646-8eb6-45fa-b288-c3241dc1a852.png)</kbd>
+
+Nos muestra un error de que no encuentra ninguna storie en nuestro src, es correcto ya que hemos eliminado todo lo que nos ponia por defecto la instalacion. Asi podemos partir de cero y entender todo paso por paso. 
+
+Al lado de nuestro componente `Button.jsx` vamos a crear `Button.stories.jsx` al poner stories ya va a poder encontrarlo y leerlo `storybook`. Vamos a añadir las primeras lineas de codigo para generar nuestra primera `storie`
+
+#### Button.storie.jsx
+```javascript
+import { Button } from './Button';
+
+
+export default {
+  title: 'Button', //Ruta que indicaremos para colocar nuestro componente en el sidebar
+  component: Button,  //Componente vamos a utilizar para generar el storie
+};
+
+
+export const primerStorie = ({label})=> <Button setState={()=>{}} label={label}></Button>
 
 ```
-Tenemos un componente que muestra dos botones. Cada uno de ellos va a modificar el estado `setState` que se le pasa por porps en el componente padre poniendo "Guille" o "Paula" en funcion del boton que pulsemos. 
-Como extra hemos añadido un `label` para el texto que queremos que salga en el boton
+
+Una vez guardemos los cambios podremos ver que ya no tenemos el error y que sale nuestra primera `storie` en el navegador
+
+<kbd>![image](https://user-images.githubusercontent.com/32310561/224856286-545ec219-7b9f-4b18-9efc-1fbde049c6c1.png)</kbd>
+
+Actualmente no es funcional pero ya nos permite ver como "quedaria" nuestro componente si lo integramos en el proyecto de react. En cada storie tenemos dos formas de ver la documentacion:
+
+<kbd>![image](https://user-images.githubusercontent.com/32310561/224856452-68b8daf8-5b17-4a82-b14c-bff1d736076b.png)</kbd>
+
+* `Canvas` Es una parte mas interactiva, nos permite modificar las properties del componente y ver al momento como cambia
+* `Docs` Es una parta mas informativa, nos permite leer mas al detalle como funciona el componente y todas sus opciones de configuración.
+
+Esta configuración ![image](https://user-images.githubusercontent.com/32310561/224858244-5a3027fc-02f0-473a-8626-0036fe9fac2b.png) lo que nos indica es la posicion del componente en el sidebar de la izquierda. En nuestro ejemplo solo hemos puesto `Button` de ahi que tengamos esta imagen
+
+<kbd>![image](https://user-images.githubusercontent.com/32310561/224858384-ea50d361-7914-497d-9b31-d57263e0e037.png)</kbd>
+
+Si añadimos algo mas a la ruta como por ejemplo `title: 'Components/Button` el resultado seria el siguiente:
+
+<kbd>![image](https://user-images.githubusercontent.com/32310561/224858580-45d9e231-4c7f-46da-98cc-5744d55f3387.png)</kbd>
+
+Nos crearia un nuevo "grupo" que engloba a `Button`, esto nos vale para agrupar diferentes `stories` por categorias o grupos de componentes en el sidebar y tenerlo ordenado. 
+
+Es importante destacar que dentro de cada `storie` podemos tener varios ejemplos programados. En nuestro codigo `Button.stories.jsx` solo tenemos un ejemplo configurado:
+```javascript
+  export const primerStorie = ({label})=> <Button setState={()=>{}} label={label}></Button>
+```
+Pero podriamos añadir otro más o los que queramos:
+
+```javascript
+  export const primerStorie = ({label})=> <Button setState={()=>{}} label={label}></Button>
+  export const segundoEjemploStorie = ({label})=> <Button setState={()=>{}} label={label}></Button>
+```
+
+Dando como resultado en el sidebar la siguiente imagen:
+
+<kbd>![image](https://user-images.githubusercontent.com/32310561/224859047-206d37d3-2a30-4274-8a17-584d9824ae95.png)</kbd>
+
+Sin embargo en la pestaña de `Docs` veremos solo un ejemplo principal y `Segundo Ejemplo Storie` pero... que ha pasado con el `primerStorie`?.
+
+<kbd>![image](https://user-images.githubusercontent.com/32310561/224860322-c01c8768-22a7-438a-b757-9059aa1242b5.png)</kbd>
+
+Esto se debe a que el primer ejemplo o `storie` que configuremos en el fichero SIEMPRE sera tomado como el principal y sera el que se muestre al principio. 
 
 
 
-https://betterprogramming.pub/6-ways-to-configure-global-styles-for-storybook-faa1517aaf1a#c26c
+
+
+
+
+
+Vamos a modificar nuestro componente de React para que `Storybook` pueda actualizar la informacion con mas detalle y que nuestro componente vaya siendo cada vez mas funcional. 
+
+#### Button.jsx
+```javascript
+import PropTypes from 'prop-types';
+
+export const Button = ({setState,label="Cambiar a"})=>{
+    const nombres = ["guille","pau"]
+
+return(
+    <>
+    <button onClick={()=>setState(nombres[0])}>{label} Guille</button>
+    <button onClick={()=>setState(nombres[1])}>{label} Paula</button>
+    </>
+)}
+
+
+Button.propTypes = {
+    setState: PropTypes.func.isRequired,
+    label: PropTypes.string,
+  };
+
+```
+
+Hemos añadido las propTypes que ademas de ser una buena practica en React nos permite que `Storybook` detecte automaticamente de que tipo son las properties del componente y si son obligatorias o no. 
+
+En esta caso estamos indicando que `setState` es de tipo funcion y es obligatoria `isRequired`, por otro lado le estamos indicando que `label` es de tipo String
+
+Con este simple cambio veremos como la pestaña de `Docs` pasa de tener esta imagen:
+
+<kbd>![image](https://user-images.githubusercontent.com/32310561/224857429-8130b595-d447-4ef9-97ce-98ab3c3f5901.png)</kbd>
+
+a esta otra:
+
+<kbd>![image](https://user-images.githubusercontent.com/32310561/224857505-39abd31e-5b6f-4cbe-8f46-438719bb65c3.png)</kbd>
+
+Ahora nos reconoce los tipos correctame, nos muestra todas las properties que usa el componente y ademas nos indica que `setState`es obligatoria añadiendo un * rojo. Ademas de todos estos cambios al haber definido como tipo string `label` nos permite pulsar 
+
+![image](https://user-images.githubusercontent.com/32310561/224857862-56c491c9-0c4b-4830-8788-88dad1ea5337.png)
+
+Y modificar el mensaje que sale en boton en la parte superior
+
+<kbd>![image](https://user-images.githubusercontent.com/32310561/224857971-1ea598b1-e76a-41de-b93f-d05e9dbc9365.png)</kbd>
+
 
 
 
