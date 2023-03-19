@@ -1,11 +1,8 @@
 
 import PropTypes from 'prop-types';
 
-/**
- * Descripcion de nuestro componente
- */
 
-export const ButtonPG = ({setState,label="Cambiar a"})=>{
+export const Button = ({setState,label="Cambiar a"})=>{
 
     const nombres = ["guille","pau"]
 
@@ -19,9 +16,8 @@ return(
 
 
 
-
-ButtonPG.propTypes = {
-    /** El setState es necesario para modificar el nombre en React */
+Button.propTypes = {
+ 
     setState: PropTypes.func.isRequired,
     label: PropTypes.string,
   };
@@ -30,7 +26,10 @@ ButtonPG.propTypes = {
 
 
 
+/**
+ * Descripcion de nuestro componente
+ */
 
   
-
+   /** El setState es necesario para modificar el nombre en React */
   
