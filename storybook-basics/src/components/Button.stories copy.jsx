@@ -1,17 +1,13 @@
 // import React, { useState } from 'react';
-
-import { Button } from './Button';
-
-
-export default {
-  title: 'Components/Button', //Ruta que indicaremos para colocar nuestro componente en el sidebar
-  component: Button,  //Componente vamos a utilizar para generar el storie
-};
+// import { Button } from './Button';
 
 
-export const primerStorie = ({label})=> <Button setState={()=>{}} label={label}></Button>
-export const segundoEjemploStorie = ({label})=> <Button setState={()=>{}} label={label}></Button>
-   
+
+// export default {
+//   title: 'Components/Buttons/ButtonGP', //Titulo de donde se va a colocar la pagina de la documentacion
+//   component: Button,  //Componente que se usa en esta pagina de la documentacion
+// };
+
 
 
 //  //PODEMOS CREAR UN TEMPLATE QUE USAREMOS EN EL RESTO DE EJEMPLO MODIFICANDO SOLO LOS ARGUMENTOS QUE NOS INTERESE PERO PERMITIENDO UNA SIMULACION DEL COMPONENTE
